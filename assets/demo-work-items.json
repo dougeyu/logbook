@@ -1,0 +1,38 @@
+{
+  "items": [
+    {
+      "title": "修复支付回调重复处理问题",
+      "status": "completed",
+      "result": "重复回调被幂等校验拦截，相关回归用例通过",
+      "evidence": [
+        "用户确认：回归用例通过",
+        "Git 提交：fix payment callback idempotency"
+      ],
+      "blocker": "",
+      "next_step": "观察次日生产告警",
+      "sensitive": false
+    },
+    {
+      "title": "迁移订单查询接口",
+      "status": "in_progress",
+      "result": "已完成用户确认的 70%",
+      "evidence": [
+        "用户确认：当前进度 70%"
+      ],
+      "blocker": "",
+      "next_step": "完成剩余接口适配并执行联调",
+      "sensitive": false
+    },
+    {
+      "title": "执行异常退款场景测试",
+      "status": "blocked",
+      "result": "",
+      "evidence": [
+        "测试记录：异常退款用例尚未执行"
+      ],
+      "blocker": "测试环境缺少脱敏退款数据",
+      "next_step": "请测试负责人补充脱敏数据后继续验证",
+      "sensitive": false
+    }
+  ]
+}

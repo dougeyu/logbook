@@ -1,0 +1,44 @@
+{
+  "items": [
+    {
+      "name": "训练数据汇总与交付",
+      "category": "数据建设",
+      "description": "按 clarify、direct、switch 三类意图拆分汇总当月训练数据,完成清洗并输出可交付数据集",
+      "metric": "交付不少于 1200 条清洗后训练数据,分类完整率 100%",
+      "weight": 40,
+      "actual": "交付 1245 条,三类拆分完成",
+      "completion": 100,
+      "self_review": "按计划完成,数据质量通过组内抽检"
+    },
+    {
+      "name": "系统提示词与 Schema 迭代",
+      "category": "模型优化",
+      "description": "以当前系统提示词和 Schema 为基准梳理全库问题,区分修复路径并落地可执行修复",
+      "metric": "输出问题清单 1 份,完成全部可规则修复项",
+      "weight": 30,
+      "actual": "输出问题清单,规则修复完成 80%",
+      "completion": 80,
+      "self_review": "部分需更新 Schema 的问题待下月排期"
+    },
+    {
+      "name": "CAE 领域知识学习",
+      "category": "学习成长",
+      "description": "补足结构仿真领域知识,支撑训练数据质量判断",
+      "metric": "完成弹簧元件、随机振动 PSD 等 3 个专题学习并输出笔记",
+      "weight": 20,
+      "actual": "完成 2 个专题笔记",
+      "completion": 67,
+      "self_review": "随机振动专题笔记整理中,下月初完成"
+    },
+    {
+      "name": "日报与知识沉淀",
+      "category": "通用",
+      "description": "坚持工作日撰写日报,沉淀可复用的数据处理方法",
+      "metric": "当月工作日日报提交率 100%",
+      "weight": 10,
+      "actual": "",
+      "completion": null,
+      "self_review": ""
+    }
+  ]
+}
