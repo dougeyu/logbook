@@ -1,6 +1,16 @@
+<div align="center">
+
 # 日报.skill
 
 > 证据驱动的工作汇报 Skill —— 把零散工作痕迹变成简洁、真实的日报、周报和月度 MBO。
+
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Python 3.13+](https://img.shields.io/badge/Python-3.13+-blue.svg)
+![Platform](https://img.shields.io/badge/Platform-WorkBuddy-purple.svg)
+![Skill Type](https://img.shields.io/badge/Skill%20Type-Evidence--Driven-green.svg)
+![Feature](https://img.shields.io/badge/Feature-Self--Evolution-blue.svg)
+
+</div>
 
 ## 这是什么
 
