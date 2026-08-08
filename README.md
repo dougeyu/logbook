@@ -1,4 +1,4 @@
-# 留痕 (Logbook)
+# 日报 (ribao)
 
 > 证据驱动的工作汇报 Skill —— 把零散工作痕迹变成简洁、真实的日报、周报和月度 MBO。
 
@@ -23,7 +23,7 @@
 ## 目录结构
 
 ```
-general-logbook/
+ribao/
 ├── SKILL.md              # Skill 主入口
 ├── references/           # 参考规则
 │   ├── report-rules.md       # 证据分级、状态判定、去 AI 味写作规范
