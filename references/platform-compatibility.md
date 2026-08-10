@@ -34,7 +34,7 @@
 
 - **安装**: 将 skill 目录放入 `~/.claude/skills/`
 - **Agent 会话收集**: 脚本自动扫描 `~/.claude/sessions/**/*.jsonl`
-- **偏好存储**: `~/.claude/skills/daily-report/user-preferences.md`
+- **偏好存储**: `~/.claude/skills/general-logbook/user-preferences.md`
 - **限制**: 不内置 .docx 编辑能力，降级为生成 .md 文件
 
 ### Hermes

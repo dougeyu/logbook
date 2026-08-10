@@ -343,6 +343,10 @@ def collect_source(name: str, start_ms: float, end_ms: float, max_chars: int,
 
 def main() -> int:
     args = parse_args()
+    if args.custom_path and args.source == "auto":
+        return fail("--custom-path 必须与明确的 --source 一起使用")
+    if args.max_chars < 1:
+        return fail("--max-chars 必须大于 0")
     try:
         report_date = dt.date.fromisoformat(args.date)
     except ValueError:

@@ -1,3 +1,8 @@
+---
+name: general-logbook
+description: 生成证据驱动的日报、周报和月度 MBO，并按读者调整表达。用户要求写日报、写周报、制定 MBO 或撰写 MBO 自评时使用。
+---
+
 # 日报.skill（OpenClaw 版）
 
 本文件是 OpenClaw 平台的入口。OpenClaw 通过 ClawHub 技能市场或本地目录加载技能。

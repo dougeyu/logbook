@@ -13,7 +13,7 @@ import json
 import sys
 from pathlib import Path
 
-STATUS_RANK = {"planned": 0, "unverified": 1, "blocked": 2, "in_progress": 3, "completed": 4}
+ALLOWED_STATUSES = {"planned", "unverified", "blocked", "in_progress", "completed"}
 
 
 def parse_args() -> argparse.Namespace:
@@ -45,8 +45,7 @@ def normalize_title(title: str) -> str:
 def merge(base: dict, new: dict) -> dict:
     merged = dict(base)
     new_status = new.get("status")
-    old_status = merged.get("status")
-    if new_status in STATUS_RANK and STATUS_RANK.get(new_status, 0) >= STATUS_RANK.get(old_status, 0):
+    if new_status in ALLOWED_STATUSES:
         merged["status"] = new_status
     for key in ("result", "blocker", "next_step"):
         value = (new.get(key) or "").strip()

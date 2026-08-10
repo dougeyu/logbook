@@ -1,7 +1,6 @@
 ---
-name: daily-report
-description: 证据驱动的工作汇报：日报、周报、月度 MBO。支持自我进化与多层记忆。
-tags: [productivity, report, work-log]
+name: general-logbook
+description: 生成证据驱动的日报、周报和月度 MBO，并按读者调整表达。用户要求写日报、写周报、制定 MBO 或撰写 MBO 自评时使用。
 ---
 
 # 日报.skill（Hermes 版）

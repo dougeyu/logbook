@@ -7,7 +7,7 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Python 3.13+](https://img.shields.io/badge/Python-3.13+-blue.svg)
 ![WorkBuddy](https://img.shields.io/badge/Platform-WorkBuddy-purple.svg)
-![Claude Code / Codex / Cursor](https://img.shields.io/badge/Platform-Claude%20Code%20%7C%20Codex%20%7C%20Cursor-orange.svg)
+![Claude Code / Codex](https://img.shields.io/badge/Platform-Claude%20Code%20%7C%20Codex-orange.svg)
 ![Hermes / OpenClaw](https://img.shields.io/badge/Platform-Hermes%20%7C%20OpenClaw-teal.svg)
 ![Self-Evolution](https://img.shields.io/badge/Feature-Self--Evolution-blue.svg)
 

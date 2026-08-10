@@ -188,7 +188,7 @@ def render_company(items: List[dict], date: dt.date, args: argparse.Namespace,
         for n, i in enumerate(blocked, 1):
             blocker = (i.get("blocker") or "").strip()
             next_step = (i.get("next_step") or "").strip()
-            lines.append(f"{n}. 困难：{i.get('title', '').strip()}——{blocker}")
+            lines.append(f"{n}. 困难：{i.get('title', '').strip()}；原因：{blocker}")
             if next_step:
                 lines.append(f"   解决方案：{next_step}")
     else:

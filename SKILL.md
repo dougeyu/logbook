@@ -1,6 +1,6 @@
 ---
 name: general-logbook
-description: 通用 AI Skill —— 证据驱动的工作汇报。从用户笔记、任务清单、会议记录、历史报告、文件、可选的 Git 活动或本机 AI 助手会话记录中提炼事实，生成日报、周报、月度 MBO 目标与自评。支持多平台运行（WorkBuddy / Claude Code / Hermes / Codex / Cursor 等），按读者类型自动调整写作策略，内置自我进化能力。当用户提出 写日报、写周报、写月报、MBO目标、MBO自评 等关键词时使用。
+description: 通用 AI Skill —— 证据驱动的工作汇报。从用户笔记、任务清单、会议记录、历史报告、文件、可选的 Git 活动或本机 AI 助手会话记录中提炼事实，生成日报、周报、月度 MBO 目标与自评。支持多平台运行（WorkBuddy / Claude Code / Hermes / Codex / OpenClaw），按读者类型自动调整写作策略，内置自我进化能力。当用户提出 写日报、写周报、写月报、MBO目标、MBO自评 等关键词时使用。
 ---
 
 # 日报:证据驱动的工作汇报

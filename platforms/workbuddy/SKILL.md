@@ -1,7 +1,6 @@
 ---
 name: general-logbook
-description: 证据驱动的工作汇报 —— 日报、周报、月度 MBO。支持多读者类型适配与自我进化。
-platforms: [workbuddy, claude-code, hermes, codex, cursor]
+description: 生成证据驱动的日报、周报和月度 MBO，并按读者调整表达。用户要求写日报、写周报、制定 MBO 或撰写 MBO 自评时使用。
 ---
 
 # 日报.skill（WorkBuddy 版）

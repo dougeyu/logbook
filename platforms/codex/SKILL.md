@@ -1,3 +1,8 @@
+---
+name: general-logbook
+description: 生成证据驱动的日报、周报和月度 MBO，并按读者调整表达。用户要求写日报、写周报、制定 MBO 或撰写 MBO 自评时使用。
+---
+
 # 日报.skill（Codex 版）
 
 本文件是 OpenAI Codex CLI 平台的入口。Codex 通过 AGENTS.md 或 SKILL.md 加载自定义指令。

@@ -9,7 +9,7 @@
 | WorkBuddy | `workbuddy` | `~/.workbuddy/projects/*/` | JSONL,毫秒时间戳 | 已支持 |
 | Codex (OpenAI) | `codex` | `~/.codex/sessions/**/` | JSONL,UTC ISO 时间戳 | 已支持 |
 | Claude Code (Anthropic) | `claude` | `~/.claude/projects/*/` | JSONL,ISO 时间戳 | 已支持 |
-| Cursor | `cursor` | `%APPDATA%/Cursor/User/workspaceStorage/*/` (Windows) / `~/Library/Application Support/Cursor/User/workspaceStorage/*/` (macOS) | JSON 文件,含 chat 记录 | 待支持 |
+| Cursor | `cursor` | `%APPDATA%/Cursor/User/workspaceStorage/*/` (Windows) / `~/Library/Application Support/Cursor/User/workspaceStorage/*/` (macOS) | SQLite (`state.vscdb`) | 实验性支持 |
 | GitHub Copilot Chat | `copilot-chat` | `~/.github-copilot/` | JSON/SQLite | 待支持 |
 | Windsurf | `windsurf` | `~/.codeium/windsurf/` | JSON | 待支持 |
 
