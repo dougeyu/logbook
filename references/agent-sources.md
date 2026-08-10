@@ -24,7 +24,7 @@
 每台电脑首次使用时按以下顺序解析，绝不复用另一台电脑的绝对路径：
 
 1. 用户本次显式提供的路径，例如 `--custom-path`。
-2. Agent 官方环境变量，例如 `CODEX_HOME`、`CLAUDE_CONFIG_DIR`、`HERMES_HOME`、`OPENCLAW_STATE_DIR`。
+2. Agent 提供或当前实现支持的环境变量，例如 `CODEX_HOME`、`CLAUDE_CONFIG_DIR`、`HERMES_HOME`、`OPENCLAW_STATE_DIR`。其中 Claude Code 的变量作用范围仍需按实际版本验证。
 3. 当前操作系统用户目录和平台默认位置。`~` 始终由运行脚本的当前用户展开。
 4. 文件签名校验：目录存在不代表可用，还要找到预期的 `*.jsonl`、`state.vscdb` 或 `state.db`。
 5. 把探测结果列给用户确认；确认后再采集。找不到时降级为用户口述或粘贴。
