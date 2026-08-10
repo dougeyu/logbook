@@ -1,6 +1,6 @@
 ---
 name: general-logbook
-description: 证据驱动的工作汇报 Skill:从用户笔记、任务清单、会议记录、历史报告、文件、可选的 Git 活动或本机 AI 助手(WorkBuddy/Codex/Claude/Cursor 等)会话记录中提炼事实,生成日报、周报、月度 MBO 目标与自评、工作日志和下一步计划。支持按读者(领导/同事/自己)自动调整写作策略,输出到对话、文件或填入用户模板。内置自我进化能力——从用户反馈中学习偏好,越用越贴合。当用户提出 写日报、写周报、写月报、MBO目标、MBO自评、月度自评、整理今日工作、汇报进展、复盘工作、提炼成果、承接遗留事项,或要求把零散工作痕迹整理成简洁汇报且不夸大完成度时使用。
+description: 通用 AI Skill —— 证据驱动的工作汇报。从用户笔记、任务清单、会议记录、历史报告、文件、可选的 Git 活动或本机 AI 助手会话记录中提炼事实，生成日报、周报、月度 MBO 目标与自评。支持多平台运行（WorkBuddy / Claude Code / Hermes / Codex / Cursor 等），按读者类型自动调整写作策略，内置自我进化能力。当用户提出 写日报、写周报、写月报、MBO目标、MBO自评 等关键词时使用。
 ---
 
 # 日报:证据驱动的工作汇报
@@ -55,7 +55,7 @@ description: 证据驱动的工作汇报 Skill:从用户笔记、任务清单、
 
 ### 0. 加载个性化偏好
 
-每次生成报告前,检查 `~/.workbuddy/skills/general-logbook/user-preferences.md` 是否存在。如存在,将其中的写作风格、内容偏好、格式偏好、读者适配规则作为额外约束注入到后续的撰写和排版步骤中。偏好为空时跳过,不阻塞流程。
+每次生成报告前,检查当前平台下的 `user-preferences.md` 是否存在（默认路径为 skill 目录下的 `user-preferences.md`）。如存在,将其中的写作风格、内容偏好、格式偏好、读者适配规则作为额外约束注入到后续的撰写和排版步骤中。偏好为空时跳过,不阻塞流程。
 
 偏好约束的优先级:用户当次指令 > 偏好文件中的规则 > skill 默认规则。
 
@@ -163,7 +163,7 @@ python scripts/render_report.py <work-items.json> --format custom --template <�
 
 1. **对话输出(默认)** :直接在对话中返回报告文本,用户自行复制使用。
 2. **生成 Markdown 文件**:将报告写入 `.md` 文件。默认存到当前工作目录,用户可指定其他路径。首次使用时询问路径偏好并记住。
-3. **填入已有文档**:用户提供 `.docx`/`.md` 模板文件,Agent 将报告填入模板对应位置。按 [tencent-local-office-edit](../../tencent-local-office-edit) 或 [tencent-docs-routing](../../tencent-docs-routing) 的规则操作本地 Office 文件。用户没有模板文件时,Agent 可按已确认的模板格式自建文件作为后续日报的载体。
+3. **填入已有文档**:用户提供 `.docx`/`.md` 模板文件,Agent 将报告填入模板对应位置。优先使用当前平台自带的文件编辑能力操作本地 Office 文件；平台不支持时降级为生成 .md 文件让用户手动复制。用户没有模板文件时,Agent 可按已确认的模板格式自建文件作为后续日报的载体。
 
 用户可在初始化时设定默认输出目标,后续每次生成时也可以临时覆盖。未初始化时,首次生成报告前询问一次。
 
@@ -178,7 +178,7 @@ python scripts/render_report.py <work-items.json> --format custom --template <�
 
 > 我记下这条规则,下次照办:[具体规则]。OK?
 
-- 用户确认 → 以补丁方式写入 `~/.workbuddy/skills/general-logbook/user-preferences.md`(只加/改一行,不重写文件)
+- 用户确认 → 以补丁方式写入当前 skill 目录下的 `user-preferences.md`(只加/改一行,不重写文件)
 - 用户拒绝 → 丢弃,不写入
 - 用户沉默(无反馈) → 不骚扰,视为满意
 
