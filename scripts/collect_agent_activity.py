@@ -1,7 +1,7 @@
 """只读收集指定本地日期的各类 AI Agent 会话工作痕迹。
 
 支持来源(--source,默认 auto 自动探测已安装的工具):
-  workbuddy    ~/.workbuddy/projects/*/*.jsonl(毫秒时间戳,message/user)
+  workbuddy    ~/.workbuddy/projects/**/*.jsonl(毫秒时间戳,message/user)
   codex        ${CODEX_HOME:-~/.codex}/sessions/**/*.jsonl(UTC ISO 时间戳,event_msg/user_message)
   claude       ${CLAUDE_CONFIG_DIR:-~/.claude}/projects/**/*.jsonl(ISO 时间戳,user 消息)
   cursor       ~/AppData/Roaming/Cursor/User/workspaceStorage/*/state.vscdb(Windows)

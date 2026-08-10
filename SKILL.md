@@ -1,9 +1,9 @@
 ---
-name: general-logbook
-description: 通用 AI Skill —— 证据驱动的工作汇报。从用户笔记、任务清单、会议记录、历史报告、文件、可选的 Git 活动或本机 AI 助手会话记录中提炼事实，生成日报、周报、月度 MBO 目标与自评。支持多平台运行（WorkBuddy / Claude Code / Hermes / Codex / OpenClaw），按读者类型自动调整写作策略，内置自我进化能力。当用户提出 写日报、写周报、写月报、MBO目标、MBO自评 等关键词时使用。
+name: workbrief
+description: WorkBrief —— 证据驱动的通用工作汇报 Skill。从用户笔记、任务清单、会议记录、历史报告、文件、可选的 Git 活动或本机 AI 助手会话记录中提炼事实，生成日报、周报、月度 MBO 目标与自评。支持多平台运行（WorkBuddy / Claude Code / Hermes / Codex / OpenClaw），按读者类型自动调整写作策略，内置自我进化能力。当用户提出 写日报、写周报、写月报、MBO目标、MBO自评 等关键词时使用。
 ---
 
-# 日报:证据驱动的工作汇报
+# WorkBrief：证据驱动的工作汇报
 
 把零散的工作痕迹变成简洁、真实的汇报。保留不确定性,区分"已完成"与"进行中",把未解决事项带入下一步计划。同时覆盖月度 MBO 闭环:月初目标表与月末自评,均从当月积累的证据中起草。
 
@@ -238,6 +238,7 @@ Agent 只产出文本表格,由用户手动录入 HCM 系统——绝不尝试�
 - [reader-profiles.md](references/reader-profiles.md):读者类型画像(领导/同事/自己),决定颗粒度、篇幅、技术细节程度、语气。
 - [agent-sources.md](references/agent-sources.md):支持的 AI Agent 数据源列表、默认安装路径与探测策略。
 - [preference-rules.md](references/preference-rules.md):自我进化机制——关键词触发、偏好格式、审批卡片、防膨胀策略。
+- [platforms/workbuddy.md](platforms/workbuddy.md)、[claude-code.md](platforms/claude-code.md)、[codex.md](platforms/codex.md)、[hermes.md](platforms/hermes.md)、[openclaw.md](platforms/openclaw.md):平台安装与运行差异。仅在安装、迁移或排查平台兼容性时读取。
 - `scripts/collect_git_activity.py`:可选的只读 Git 元数据收集器。
 - `scripts/probe_agent_sources.py`:跨电脑只读探测 Agent 数据位置和文件签名,不读取消息正文。
 - `scripts/collect_agent_activity.py`:可选的多源 AI Agent 会话收集器(workbuddy/codex/claude/cursor 等,按日期)。

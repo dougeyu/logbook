@@ -1,7 +1,7 @@
 # user-preferences.md 模板示例
 
 这是个性化偏好文件的标准格式。用户实际使用时，偏好文件存放在
-`~/.workbuddy/skills/general-logbook/user-preferences.md`，不在项目仓库中。
+`~/.workbuddy/skills/workbrief/user-preferences.md`，不在项目仓库中。
 
 ----
 

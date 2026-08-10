@@ -1,6 +1,6 @@
 # 平台兼容性
 
-日报.skill 设计为平台无关的通用 AI Skill。核心规则（references/）和脚本（scripts/）在所有平台上通用，平台适配入口（platforms/）提供各平台所需的薄壳。
+WorkBrief 设计为平台无关的通用 AI Skill。根目录 `SKILL.md` 是唯一入口；核心规则（references/）和脚本（scripts/）在所有平台上通用，`platforms/` 只保存安装与运行说明。
 
 ## 功能兼容矩阵
 
@@ -26,15 +26,15 @@
 ### WorkBuddy
 
 - **安装**: 将 skill 目录放入 `~/.workbuddy/skills/`
-- **Agent 会话收集**: 脚本自动扫描 `~/.workbuddy/projects/*/*.jsonl`
-- **偏好存储**: `~/.workbuddy/skills/general-logbook/user-preferences.md`
+- **Agent 会话收集**: 脚本自动扫描 `~/.workbuddy/projects/**/*.jsonl`
+- **偏好存储**: `~/.workbuddy/skills/workbrief/user-preferences.md`
 - **Office 文件**: 通过内置 tencent-local-office-edit skill 操作 .docx
 
 ### Claude Code
 
 - **安装**: 将 skill 目录放入 `~/.claude/skills/`
-- **Agent 会话收集**: 脚本自动扫描 `~/.claude/sessions/**/*.jsonl`
-- **偏好存储**: `~/.claude/skills/general-logbook/user-preferences.md`
+- **Agent 会话收集**: 脚本自动扫描 `${CLAUDE_CONFIG_DIR:-~/.claude}/projects/<encoded-cwd>/*.jsonl`
+- **偏好存储**: `~/.claude/skills/workbrief/user-preferences.md`
 - **限制**: 不内置 .docx 编辑能力，降级为生成 .md 文件
 
 ### Hermes
