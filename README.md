@@ -61,6 +61,7 @@ logbook/
 │   └── agent-sources.md      # AI Agent 数据源支持列表
 ├── scripts/              # Python 工具脚本
 │   ├── collect_git_activity.py   # Git 提交元数据收集
+│   ├── probe_agent_sources.py    # 跨电脑探测 Agent 会话数据位置
 │   ├── collect_agent_activity.py # Agent 会话收集（WorkBuddy/Codex/Claude/Cursor）
 │   ├── validate_work_items.py    # 工作项结构校验
 │   ├── render_report.py          # 报告渲染（日报/周报/自定义模板）

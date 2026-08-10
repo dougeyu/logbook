@@ -43,7 +43,13 @@ description: 通用 AI Skill —— 证据驱动的工作汇报。从用户笔�
 **4. 数据源配置(从哪里找证据)**:询问用户使用哪些 AI 助手及其会话存储路径:
 
 1. **用户提供路径**:直接给出各 agent 的会话目录或具体路径,Agent 记录到配置。
-2. **用户不知道路径**:Agent 自行检索本机常见 agent 的默认目录(见 [agent-sources.md](references/agent-sources.md)),探测到的结果列给用户确认。
+2. **用户不知道路径**:Agent 先运行只读探测脚本,按当前电脑的用户目录、操作系统和 Agent 环境变量查找候选位置,再把结果列给用户确认。完整规则见 [agent-sources.md](references/agent-sources.md)。
+
+```bash
+python scripts/probe_agent_sources.py
+```
+
+探测只检查路径、文件签名和数量,不读取消息正文。不得复用另一台电脑的绝对路径。
 3. **无 agent 可用**:跳过,后续证据仅依赖用户口述和粘贴。
 4. **引导用户提供**:如果用户暂时无法确定,给出常见 agent 的默认路径提示,让用户自行检查确认。
 
@@ -86,7 +92,9 @@ python scripts/collect_git_activity.py --repo <仓库路径> --date YYYY-MM-DD
 python scripts/collect_agent_activity.py --date YYYY-MM-DD
 ```
 
-该脚本只读扫描本机各 Agent 工具的会话记录(--source 可选 workbuddy/codex/claude/cursor,默认 auto 自动探测),提取指定日期内用户本人的消息并剥离系统注入内容。用于回忆"今天和 AI 助手一起做了什么";其内容视为用户陈述级证据,不等于已验证结果。DeepSeek 网页版等纯云端工具无法自动读取,请用户直接粘贴当日关键交流。
+该脚本只读扫描本机已支持的 Agent 会话记录(--source 可选 workbuddy/codex/claude/cursor,默认 auto),提取指定日期内用户本人的消息并剥离系统注入内容。Codex 使用 `CODEX_HOME`、Claude Code 使用 `CLAUDE_CONFIG_DIR`;未设置时回退到当前用户的默认目录。
+
+会话内容只用于回忆"今天和 AI 助手一起做了什么",属于用户陈述级证据,不等于已验证结果。Hermes/OpenClaw 当前仅探测位置,不自动解析其 SQLite 正文。DeepSeek 网页版等纯云端工具无法自动读取,请用户直接粘贴当日关键交流。
 
 ### 3. 规范化工作项
 
@@ -231,6 +239,7 @@ Agent 只产出文本表格,由用户手动录入 HCM 系统——绝不尝试�
 - [agent-sources.md](references/agent-sources.md):支持的 AI Agent 数据源列表、默认安装路径与探测策略。
 - [preference-rules.md](references/preference-rules.md):自我进化机制——关键词触发、偏好格式、审批卡片、防膨胀策略。
 - `scripts/collect_git_activity.py`:可选的只读 Git 元数据收集器。
+- `scripts/probe_agent_sources.py`:跨电脑只读探测 Agent 数据位置和文件签名,不读取消息正文。
 - `scripts/collect_agent_activity.py`:可选的多源 AI Agent 会话收集器(workbuddy/codex/claude/cursor 等,按日期)。
 - `scripts/validate_work_items.py`:工作项结构与语义的确定性校验器。
 - `scripts/render_report.py`:确定性报告渲染器(日报/周报/公司导师版,支持昨日承接)。

@@ -2,8 +2,8 @@
 
 支持来源(--source,默认 auto 自动探测已安装的工具):
   workbuddy    ~/.workbuddy/projects/*/*.jsonl(毫秒时间戳,message/user)
-  codex        ~/.codex/sessions/**/*.jsonl(UTC ISO 时间戳,event_msg/user_message)
-  claude       ~/.claude/projects/*/*.jsonl(ISO 时间戳,user 消息)
+  codex        ${CODEX_HOME:-~/.codex}/sessions/**/*.jsonl(UTC ISO 时间戳,event_msg/user_message)
+  claude       ${CLAUDE_CONFIG_DIR:-~/.claude}/projects/**/*.jsonl(ISO 时间戳,user 消息)
   cursor       ~/AppData/Roaming/Cursor/User/workspaceStorage/*/state.vscdb(Windows)
                ~/Library/Application Support/Cursor/User/workspaceStorage/*/state.vscdb(macOS)
                ~/.config/Cursor/User/workspaceStorage/*/state.vscdb(Linux)
@@ -122,9 +122,31 @@ def parse_claude(obj: dict) -> List[str]:
     return extract_content_texts(message.get("content"))
 
 
+def _real_home() -> Path:
+    """Use the OS account home when an Agent profile overrides HOME."""
+    configured = os.environ.get("HERMES_REAL_HOME", "").strip()
+    return Path(configured).expanduser().resolve() if configured else Path.home().resolve()
+
+
+def _state_home(env_name: str, default_name: str) -> Path:
+    """Resolve an Agent state root from its environment override or user home."""
+    configured = os.environ.get(env_name, "").strip()
+    if configured:
+        return Path(configured).expanduser().resolve()
+    return (_real_home() / default_name).resolve()
+
+
+def _codex_root() -> Path:
+    return _state_home("CODEX_HOME", ".codex") / "sessions"
+
+
+def _claude_root() -> Path:
+    return _state_home("CLAUDE_CONFIG_DIR", ".claude") / "projects"
+
+
 def _cursor_root() -> Optional[Path]:
     """探测 Cursor workspaceStorage 目录(跨平台)。"""
-    home = Path.home()
+    home = _real_home()
     if os.name == "nt":
         candidates = [
             Path(os.environ.get("APPDATA", "")) / "Cursor" / "User" / "workspaceStorage",
@@ -225,19 +247,19 @@ def get_timestamp_ms(obj: dict) -> Optional[float]:
 
 SOURCES = {
     "workbuddy": {
-        "root": lambda: Path.home() / ".workbuddy" / "projects",
+        "root": lambda: _real_home() / ".workbuddy" / "projects",
         "parser": parse_workbuddy,
         "file_pattern": "*.jsonl",
         "type": "jsonl",
     },
     "codex": {
-        "root": lambda: Path.home() / ".codex" / "sessions",
+        "root": _codex_root,
         "parser": parse_codex,
         "file_pattern": "*.jsonl",
         "type": "jsonl",
     },
     "claude": {
-        "root": lambda: Path.home() / ".claude" / "projects",
+        "root": _claude_root,
         "parser": parse_claude,
         "file_pattern": "*.jsonl",
         "type": "jsonl",
