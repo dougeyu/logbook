@@ -29,5 +29,9 @@ Desktop.ini
 tmp/
 *.log
 
+# User-specific config (personalized, not part of the repo)
+config.json
+user-preferences.md
+
 # Test outputs
 test_output/

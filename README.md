@@ -41,7 +41,7 @@
 2. 在对话中输入 `写日报` / `写周报` / `帮我定 N 月 MBO` 等
 3. Skill 自动收集证据、追问缺口、生成报告
 
-第一次使用时会引导你做四项一次性配置：你的岗位角色、报告读者（领导/同事/自己）、报告模板、数据源路径。之后直接使用。
+第一次使用时会引导你做四项一次性配置：你的职业/工种、报告读者（领导/同事/自己）、报告模板、数据源路径。之后直接使用。
 
 ## 目录结构
 
@@ -58,10 +58,11 @@ workbrief/
 │   ├── report-rules.md       # 证据分级、状态判定、去 AI 味写作规范
 │   ├── output-formats.md     # 日报/周报/MBO 输出格式
 │   ├── mbo-rules.md          # MBO SMART 原则
-│   ├── role-profiles.md      # 岗位角色画像（研发/销售/产品等）
+│   ├── role-profiles.md      # 职业/工种画像（研发/销售/产品等）
 │   ├── reader-profiles.md    # 读者类型画像（领导/同事/自己）
 │   └── agent-sources.md      # AI Agent 数据源支持列表
 ├── scripts/              # Python 工具脚本
+│   ├── init_config.py           # 初始化状态管理（status/set）
 │   ├── collect_git_activity.py   # Git 提交元数据收集
 │   ├── probe_agent_sources.py    # 跨电脑探测 Agent 会话数据位置
 │   ├── collect_agent_activity.py # Agent 会话收集（WorkBuddy/Codex/Claude/Cursor）
@@ -70,14 +71,16 @@ workbrief/
 │   ├── aggregate_weekly.py       # 多天数据聚合 → 周报
 │   └── mbo_planner.py            # MBO 目标/自评校验与渲染
 └── assets/               # 演示数据与模板
+    ├── config.example.json
+    ├── user-preferences.example.md
     ├── demo-work-items.json
     ├── demo-mbo-items.json
     └── report-template.example.md
 ```
 
-## 从 general-logbook 升级
+## 从旧版本升级
 
-已有用户升级时，将 Skill 安装目录改名为 `workbrief`，并保留原目录中的 `user-preferences.md`。不要同时保留新旧两个入口，否则 Agent 可能重复注册技能。
+历史版本名为 general-logbook（更早为 logbook）。已有用户升级时，将 Skill 安装目录改名为 `workbrief`，并保留原目录中的 `user-preferences.md`。不要同时保留新旧两个入口，否则 Agent 可能重复注册技能。
 ## 许可
 
 MIT License

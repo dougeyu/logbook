@@ -1,0 +1,9 @@
+{
+  "role": "算法/研发",
+  "reader": "领导",
+  "template": "company",
+  "data_sources": [
+    "workbuddy",
+    "codex"
+  ]
+}

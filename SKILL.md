@@ -22,17 +22,25 @@ description: WorkBrief —— 证据驱动的通用工作汇报 Skill。从用�
 
 ## 首次使用:初始化
 
-首次为用户服务时,完成四项一次性配置(之后每次直接使用,不重复询问):
+首次为用户服务时,必须完成四项一次性配置。四项全部必填,不可跳过,缺任何一项都不开始起草报告(之后每次直接使用,不重复询问)。
 
-**1. 角色确认(人设)**:确认用户的岗位角色(研发/算法、销售/商务、产品经理、运营、生产/质检、通用)。角色决定追问策略——关注点、追问重点、措辞风格按 [role-profiles.md](references/role-profiles.md) 中对应画像执行。角色不明确时用通用画像,不强行归类。
+**0. 状态检查(硬闸门)**:生成任何报告前,先运行:
 
-**2. 读者确认(写给谁看)**:确认日报/周报的交付对象:
+```bash
+python scripts/init_config.py status
+```
+
+输出 `"initialized": true` 表示四项齐全,直接使用存档配置;输出 `"initialized": false` 表示有缺失,必须补齐 `missing_fields` 列出的项后才能开始起草。
+
+**1. 职业/工种确认**:确认用户的职业或工种(研发/算法、销售/商务、产品经理、运营、生产/质检、通用)。职业决定追问策略——关注点、追问重点、措辞风格按 [role-profiles.md](references/role-profiles.md) 中对应画像执行。
+
+**2. 读者确认(写给谁看)**:必填。确认日报/周报的交付对象,三选一:
 
 - **上级/领导**:先结果后过程,精简、风险前置,200-400 字日报。
 - **同事/团队**:写清上下文和协作接口,技术细节该写就写,300-600 字日报。
 - **自己/个人记录**:流水账也可以,失败和踩坑最有价值,篇幅不限。
 
-读者决定写作策略——颗粒度、篇幅、技术细节程度、语气正式度,完整规则见 [reader-profiles.md](references/reader-profiles.md)。用户不指定时按场景推定:公司模板日报默认读者为"上级/领导",MBO 自评默认读者为"上级/领导",个人日志默认读者为"自己"。用户可设定默认读者,每份报告生成时也可临时切换。
+读者决定写作策略——颗粒度、篇幅、技术细节程度、语气正式度,完整规则见 [reader-profiles.md](references/reader-profiles.md)。读者类型必填,三选一,不得跳过。用户可设定默认读者,每份报告生成时也可临时切换。
 
 **3. 模板确认(格式)**:不同部门、不同人的日报/周报模板往往不一样。按此顺序确定:
 
@@ -40,7 +48,7 @@ description: WorkBrief —— 证据驱动的通用工作汇报 Skill。从用�
 2. **落成模板文件**:把确认的栏目结构整理为占位符模板(语法见 [output-formats.md](references/output-formats.md) 的"自定义模板"一节),保存为用户模板文件,后续复用;同时记录姓名/部门/岗位/导师等固定信息。
 3. **无模板时用内置格式**:标准日报(daily)兜底;确认用户所在团队使用导师版模板时,可用内置 company 格式。
 
-**4. 数据源配置(从哪里找证据)**:询问用户使用哪些 AI 助手及其会话存储路径:
+**4. 数据源确认(从哪里找证据)**:必填。询问用户使用哪些 AI 助手及其会话存储路径:
 
 1. **用户提供路径**:直接给出各 agent 的会话目录或具体路径,Agent 记录到配置。
 2. **用户不知道路径**:Agent 先运行只读探测脚本,按当前电脑的用户目录、操作系统和 Agent 环境变量查找候选位置,再把结果列给用户确认。完整规则见 [agent-sources.md](references/agent-sources.md)。
@@ -50,12 +58,16 @@ python scripts/probe_agent_sources.py
 ```
 
 探测只检查路径、文件签名和数量,不读取消息正文。不得复用另一台电脑的绝对路径。
-3. **无 agent 可用**:跳过,后续证据仅依赖用户口述和粘贴。
+3. **用户明确没有使用任何 agent**:经用户显式确认后,`data_sources` 记录为空数组 `[]`,后续证据仅依赖口述和粘贴。不得在用户未确认的情况下静默跳过。
 4. **引导用户提供**:如果用户暂时无法确定,给出常见 agent 的默认路径提示,让用户自行检查确认。
 
-配置完成后,每次收集证据时按已确认的数据源自动执行;不可用时降级为用户口述,不影响报告生成。
+配置确认后写入 config.json:
 
-**初始化产出物**:角色画像、默认读者、模板偏好、数据源配置——四个维度独立。角色决定追问方向,读者决定怎么写,模板决定长什么样,数据源决定从哪里找证据。MBO 目标与自评的表格格式由公司 HCM 系统统一,**不需要初始化**,所有人通用。**输出目标(对话/文件/填模板)可在每次生成时选择,如用户希望固化偏好也可在初始化时一并确认。**
+```bash
+python scripts/init_config.py set --role 算法 --reader 领导 --template company --source workbuddy,codex
+```
+
+**初始化产出物**:职业画像、读者类型、模板、数据源四项,写入 skill 根目录 config.json。config.json 是初始化状态的唯一事实来源——存在且四项齐全即视为已初始化,不依赖任何平台的会话记忆。四项职责:职业决定追问方向,读者决定怎么写,模板决定长什么样,数据源决定从哪里找证据。MBO 目标与自评的表格格式由公司 HCM 系统统一,**不需要初始化**,所有人通用。**输出目标(对话/文件/填模板)可在每次生成时选择,如用户希望固化偏好也可在初始化时一并确认。**
 
 ## 工作流
 
@@ -67,7 +79,7 @@ python scripts/probe_agent_sources.py
 
 ### 1. 明确报告目标
 
-识别报告周期、汇报对象(读者类型)和输出风格。如果用户未初始化则按初始化流程逐一确认;已初始化则直接使用存档配置。用户可临时切换读者类型和输出格式,不影响已存档的默认值。不因可选偏好而阻塞流程。
+先运行 `python scripts/init_config.py status` 检查初始化状态。未初始化(四项有缺失)时,必须先补齐缺失项,不得跳过直接起草。已初始化则直接使用 config.json 中的存档配置。识别报告周期、汇报对象(读者类型)和输出风格;用户可临时切换读者类型和输出格式,不影响已存档的默认值。
 
 ### 2. 收集证据
 
@@ -124,7 +136,7 @@ python scripts/validate_work_items.py <work-items.json>
 
 ### 4. 消除关键缺口
 
-每轮最多追问 3 个问题。优先问能改变结论的问题:能把"已完成"打回"进行中"的、能暴露阻塞的、能确定下一步动作的。追问的具体方向按用户角色画像执行(见 [role-profiles.md](references/role-profiles.md)):问研发"测试过了吗",问销售"金额多少、到哪一步",问产品"交付物完成了吗"。用户答不上来,就标注"未核实"或省略该说法,不猜。
+每轮最多追问 3 个问题。优先问能改变结论的问题:能把"已完成"打回"进行中"的、能暴露阻塞的、能确定下一步动作的。追问的具体方向按用户职业画像执行(见 [role-profiles.md](references/role-profiles.md)):问研发"测试过了吗",问销售"金额多少、到哪一步",问产品"交付物完成了吗"。用户答不上来,就标注"未核实"或省略该说法,不猜。
 
 ### 5. 撰写有据表述
 
@@ -234,11 +246,12 @@ Agent 只产出文本表格,由用户手动录入 HCM 系统——绝不尝试�
 - [report-rules.md](references/report-rules.md):证据分级、状态判定、去重、隐私、追问策略、自然写作规范(去 AI 味)。
 - [output-formats.md](references/output-formats.md):公司导师版日报、自定义模板语法、标准日报、聊天简报、管理者版、证据附录、周报与 MBO 表格模板。
 - [mbo-rules.md](references/mbo-rules.md):SMART 原则、MBO 字段规则、月初/月末流程、HCM 边界。
-- [role-profiles.md](references/role-profiles.md):岗位角色画像(关注点、追问重点、措辞风格)。
+- [role-profiles.md](references/role-profiles.md):职业/工种画像(关注点、追问重点、措辞风格)。
 - [reader-profiles.md](references/reader-profiles.md):读者类型画像(领导/同事/自己),决定颗粒度、篇幅、技术细节程度、语气。
 - [agent-sources.md](references/agent-sources.md):支持的 AI Agent 数据源列表、默认安装路径与探测策略。
 - [preference-rules.md](references/preference-rules.md):自我进化机制——关键词触发、偏好格式、审批卡片、防膨胀策略。
 - [platforms/workbuddy.md](platforms/workbuddy.md)、[claude-code.md](platforms/claude-code.md)、[codex.md](platforms/codex.md)、[hermes.md](platforms/hermes.md)、[openclaw.md](platforms/openclaw.md):平台安装与运行差异。仅在安装、迁移或排查平台兼容性时读取。
+- `scripts/init_config.py`:初始化状态与配置管理。status 检查四项是否齐全,set 写入配置。
 - `scripts/collect_git_activity.py`:可选的只读 Git 元数据收集器。
 - `scripts/probe_agent_sources.py`:跨电脑只读探测 Agent 数据位置和文件签名,不读取消息正文。
 - `scripts/collect_agent_activity.py`:可选的多源 AI Agent 会话收集器(workbuddy/codex/claude/cursor 等,按日期)。
@@ -248,4 +261,5 @@ Agent 只产出文本表格,由用户手动录入 HCM 系统——绝不尝试�
 - `scripts/mbo_planner.py`:月度 MBO 目标表与自评表的校验与渲染。
 - `assets/demo-work-items.json`:安全演示数据,用于测试校验器与报告流程。
 - `assets/demo-mbo-items.json`:MBO 演示指标,用于 plan 与 review 两种模式。
+- `assets/config.example.json`:初始化配置示例模板,复制为 config.json 后按需修改。
 - `assets/user-preferences.example.md`:个性化偏好模板示例,供用户参考格式。
