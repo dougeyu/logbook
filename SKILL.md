@@ -77,6 +77,8 @@ python scripts/init_config.py set --role 算法 --reader 领导 --template compa
 
 偏好约束的优先级:用户当次指令 > 偏好文件中的规则 > skill 默认规则。
 
+**边界**:`user-preferences.md` 只含写作风格、内容偏好、格式偏好等软性规则,不含初始化四项(职业/读者/模板/数据源)。初始化四项的唯一事实来源是 `config.json`,必须通过 `init_config.py status` 检查,不得从 `user-preferences.md` 推断初始化状态。
+
 ### 1. 明确报告目标
 
 先运行 `python scripts/init_config.py status` 检查初始化状态。未初始化(四项有缺失)时,必须先补齐缺失项,不得跳过直接起草。已初始化则直接使用 config.json 中的存档配置。识别报告周期、汇报对象(读者类型)和输出风格;用户可临时切换读者类型和输出格式,不影响已存档的默认值。
