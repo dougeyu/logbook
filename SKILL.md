@@ -17,7 +17,7 @@ description: WorkBrief —— 证据驱动的通用工作汇报 Skill。从用�
 - 只读优先。未经明确确认,不发送、不发布、不修改外部系统、不扩大访问范围。
 - 绝不编造:完成度、业务影响、日期、百分比、负责人、测试结果、部署状态、MBO 实际值。
 - HCM/MBO 系统仅限内网:绝不尝试访问,绝不上传任何文件。MBO 表格只以文本交付,由用户手动录入。
-- 网页版 AI 工具(如 DeepSeek 网页对话)的会话存在云端、无法读取;请用户直接粘贴当日要点。
+- 网页版 AI 工具(如 DeepSeek 网页对话)的会话存在云端、无法读取;请用户直接粘贴当日要点。本地 harness(如 DeepSeek Harness)的会话记录可自动读取。
 - 工具或权限不可用时照常工作:接受用户粘贴的笔记,通过追问补齐。
 
 ## 首次使用:初始化
@@ -104,7 +104,7 @@ python scripts/collect_git_activity.py --repo <仓库路径> --date YYYY-MM-DD
 python scripts/collect_agent_activity.py --date YYYY-MM-DD
 ```
 
-该脚本只读扫描本机已支持的 Agent 会话记录(--source 可选 workbuddy/codex/claude/cursor,默认 auto),提取指定日期内用户本人的消息并剥离系统注入内容。Codex 使用 `CODEX_HOME`、Claude Code 使用 `CLAUDE_CONFIG_DIR`;未设置时回退到当前用户的默认目录。
+该脚本只读扫描本机已支持的 Agent 会话记录(--source 可选 workbuddy/codex/claude/cursor/deepseek,默认 auto),提取指定日期内用户本人的消息并剥离系统注入内容。Codex 使用 `CODEX_HOME`、Claude Code 使用 `CLAUDE_CONFIG_DIR`、DeepSeek Harness 使用 `DSH_HOME`;未设置时回退到当前用户的默认目录。DeepSeek Harness 的会话是 zstd 压缩的 JSONL,采集需 Python `zstandard` 库;库不可用时该源自动跳过。
 
 会话内容只用于回忆"今天和 AI 助手一起做了什么",属于用户陈述级证据,不等于已验证结果。Hermes/OpenClaw 当前仅探测位置,不自动解析其 SQLite 正文。DeepSeek 网页版等纯云端工具无法自动读取,请用户直接粘贴当日关键交流。
 
@@ -254,7 +254,7 @@ Agent 只产出文本表格,由用户手动录入 HCM 系统——绝不尝试�
 - `scripts/init_config.py`:初始化状态与配置管理。status 检查四项是否齐全,set 写入配置。
 - `scripts/collect_git_activity.py`:可选的只读 Git 元数据收集器。
 - `scripts/probe_agent_sources.py`:跨电脑只读探测 Agent 数据位置和文件签名,不读取消息正文。
-- `scripts/collect_agent_activity.py`:可选的多源 AI Agent 会话收集器(workbuddy/codex/claude/cursor 等,按日期)。
+- `scripts/collect_agent_activity.py`:可选的多源 AI Agent 会话收集器(workbuddy/codex/claude/cursor/deepseek 等,按日期)。
 - `scripts/validate_work_items.py`:工作项结构与语义的确定性校验器。
 - `scripts/render_report.py`:确定性报告渲染器(日报/周报/公司导师版,支持昨日承接)。
 - `scripts/aggregate_weekly.py`:多天工作项聚合为周报数据集。

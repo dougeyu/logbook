@@ -43,6 +43,7 @@ def source_registry() -> dict[str, dict]:
     claude_home = state_home("CLAUDE_CONFIG_DIR", ".claude")
     hermes_home = state_home("HERMES_HOME", ".hermes")
     openclaw_home = state_home("OPENCLAW_STATE_DIR", ".openclaw")
+    deepseek_home = state_home("DSH_HOME", ".dsh")
     return {
         "workbuddy": {
             "support": "supported",
@@ -84,6 +85,12 @@ def source_registry() -> dict[str, dict]:
                 candidate(openclaw_home / "sessions", "directory", "*.jsonl", "旧版单 Agent 会话"),
             ],
         },
+        "deepseek": {
+            "support": "supported",
+            "candidates": [
+                candidate(deepseek_home / "sessions", "directory", "session.jsonl.zstd", "会话 JSONL(zstd 压缩)"),
+            ],
+        },
     }
 
 
@@ -119,7 +126,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--source",
-        choices=["all", "workbuddy", "codex", "claude", "cursor", "hermes", "openclaw"],
+        choices=["all", "workbuddy", "codex", "claude", "cursor", "hermes", "openclaw", "deepseek"],
         default="all",
         help="只探测指定来源（默认 all）",
     )

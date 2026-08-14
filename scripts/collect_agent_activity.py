@@ -7,12 +7,14 @@
   cursor       ~/AppData/Roaming/Cursor/User/workspaceStorage/*/state.vscdb(Windows)
                ~/Library/Application Support/Cursor/User/workspaceStorage/*/state.vscdb(macOS)
                ~/.config/Cursor/User/workspaceStorage/*/state.vscdb(Linux)
+  deepseek     ${DSH_HOME:-~/.dsh}/sessions/*/session-*/session.jsonl.zstd
+               (zstd 压缩的 JSONL,毫秒时间戳,type=user/message)
 
 支持 --custom-path 让用户指定自定义 agent 会话目录(覆盖默认路径)。
 
 只提取用户本人的消息,自动剥离系统注入内容,不修改任何文件。
-网页版 AI 工具(如 DeepSeek 网页对话)会话存于云端,不在本脚本范围,
-相关内容请用户手动粘贴。
+DeepSeek 网页版等纯云端工具的会话存于云端,不在本脚本范围,相关内容请用户手动粘贴;
+本脚本支持的是本地 harness(如 DeepSeek Harness)的会话记录。
 """
 
 
@@ -37,7 +39,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--date", required=True, help="本地日期,格式 YYYY-MM-DD")
     parser.add_argument(
         "--source",
-        choices=["auto", "workbuddy", "codex", "claude", "cursor"],
+        choices=["auto", "workbuddy", "codex", "claude", "cursor", "deepseek"],
         default="auto",
         help="收集来源;auto 表示扫描所有已安装的工具(默认)",
     )
@@ -122,6 +124,39 @@ def parse_claude(obj: dict) -> List[str]:
     return extract_content_texts(message.get("content"))
 
 
+def parse_deepseek(obj: dict) -> List[str]:
+    if obj.get("type") != "user/message":
+        return []
+    data = obj.get("data", {})
+    if not isinstance(data, dict):
+        return []
+    if data.get("role") != "user":
+        return []
+    # 过滤系统/插件注入(如运行时上下文),只保留真正的用户输入
+    source = data.get("source", {})
+    if isinstance(source, dict):
+        kind = source.get("kind")
+        if kind is not None and kind != "user":
+            return []
+    return extract_content_texts(data.get("content"))
+
+
+def decompress_zstd(path: Path) -> str:
+    """流式解压 zstd 文件为文本;zstandard 库不可用时返回空字符串。"""
+    try:
+        import zstandard
+    except ImportError:
+        return ""
+    try:
+        import io
+        dctx = zstandard.ZstdDecompressor()
+        data = path.read_bytes()
+        with dctx.stream_reader(io.BytesIO(data)) as reader:
+            return reader.read().decode("utf-8", errors="replace")
+    except Exception:
+        return ""
+
+
 def _real_home() -> Path:
     """Use the OS account home when an Agent profile overrides HOME."""
     configured = os.environ.get("HERMES_REAL_HOME", "").strip()
@@ -142,6 +177,10 @@ def _codex_root() -> Path:
 
 def _claude_root() -> Path:
     return _state_home("CLAUDE_CONFIG_DIR", ".claude") / "projects"
+
+
+def _deepseek_root() -> Path:
+    return _state_home("DSH_HOME", ".dsh") / "sessions"
 
 
 def _cursor_root() -> Optional[Path]:
@@ -237,7 +276,7 @@ def _extract_cursor_conversations(data, depth=0):
 
 
 def get_timestamp_ms(obj: dict) -> Optional[float]:
-    ts = obj.get("timestamp")
+    ts = obj.get("timestamp", obj.get("time"))
     if isinstance(ts, (int, float)):
         return float(ts)
     if isinstance(ts, str):
@@ -269,6 +308,12 @@ SOURCES = {
         "parser": None,
         "file_pattern": "state.vscdb",
         "type": "sqlite",
+    },
+    "deepseek": {
+        "root": _deepseek_root,
+        "parser": parse_deepseek,
+        "file_pattern": "session.jsonl.zstd",
+        "type": "jsonl_zstd",
     },
 }
 
@@ -307,6 +352,48 @@ def collect_source(name: str, start_ms: float, end_ms: float, max_chars: int,
                     "tool_call_count": 0,
                     "user_messages": messages,
                 })
+    elif source_type == "jsonl_zstd":
+        # DeepSeek: zstd 压缩的 JSONL
+        parser = SOURCES[name]["parser"]
+        for zfile in sorted(root.rglob(file_pattern)):
+            if not zfile.is_file():
+                continue
+            messages = []
+            tool_calls = 0
+            text = decompress_zstd(zfile)
+            if not text:
+                continue
+            for line in text.splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    obj = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                ts_ms = get_timestamp_ms(obj)
+                if ts_ms is None or not (start_ms <= ts_ms < end_ms):
+                    continue
+                if obj.get("type") in ("tool/call", "tool/result", "tool-call-chunks"):
+                    tool_calls += 1
+                for value in parser(obj):
+                    value = clean_text(value)
+                    if value:
+                        messages.append(
+                            {
+                                "time": dt.datetime.fromtimestamp(ts_ms / 1000).strftime("%H:%M"),
+                                "text": value[:max_chars],
+                            }
+                        )
+            if messages or tool_calls:
+                sessions.append(
+                    {
+                        "session": zfile.parent.name[:40],
+                        "user_message_count": len(messages),
+                        "tool_call_count": tool_calls,
+                        "user_messages": messages,
+                    }
+                )
     else:
         # JSONL sources
         parser = SOURCES[name]["parser"]

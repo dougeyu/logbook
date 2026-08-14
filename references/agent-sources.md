@@ -12,6 +12,7 @@
 | Cursor | Windows `%APPDATA%/Cursor/User/workspaceStorage/*/state.vscdb`；macOS `~/Library/Application Support/Cursor/User/workspaceStorage/*/state.vscdb`；Linux `~/.config/Cursor/User/workspaceStorage/*/state.vscdb` | SQLite | 实验性支持 |
 | Hermes | `${HERMES_HOME:-~/.hermes}/state.db` | SQLite | 仅探测，暂不自动解析 |
 | OpenClaw | `${OPENCLAW_STATE_DIR:-~/.openclaw}/agents/<agentId>/agent/openclaw-agent.sqlite`；旧版/归档文件在 `agents/<agentId>/sessions/` | SQLite / JSONL | 仅探测，暂不自动解析 |
+| DeepSeek Harness | `${DSH_HOME:-~/.dsh}/sessions/<encoded-cwd>/<session-id>/session.jsonl.zstd` | JSONL（zstd 压缩） | 已支持 |
 
 状态含义：
 
@@ -24,7 +25,7 @@
 每台电脑首次使用时按以下顺序解析，绝不复用另一台电脑的绝对路径：
 
 1. 用户本次显式提供的路径，例如 `--custom-path`。
-2. Agent 提供或当前实现支持的环境变量，例如 `CODEX_HOME`、`CLAUDE_CONFIG_DIR`、`HERMES_HOME`、`OPENCLAW_STATE_DIR`。其中 Claude Code 的变量作用范围仍需按实际版本验证。
+2. Agent 提供或当前实现支持的环境变量，例如 `CODEX_HOME`、`CLAUDE_CONFIG_DIR`、`HERMES_HOME`、`OPENCLAW_STATE_DIR`、`DSH_HOME`。其中 Claude Code 的变量作用范围仍需按实际版本验证。
 3. 当前操作系统用户目录和平台默认位置。`~` 始终由运行脚本的当前用户展开。
 4. 文件签名校验：目录存在不代表可用，还要找到预期的 `*.jsonl`、`state.vscdb` 或 `state.db`。
 5. 把探测结果列给用户确认；确认后再采集。找不到时降级为用户口述或粘贴。
@@ -63,6 +64,7 @@ python scripts/collect_agent_activity.py --date YYYY-MM-DD --source claude --cus
 - 本地会话格式可能随 Agent 升级变化。找到文件但提取结果为空时，先报告“格式可能变化”，不要声称当天没有工作。
 - Claude Code 和 Cursor 的持久化结构缺少稳定公开契约，升级后必须用安全样例回归。
 - Hermes 和 OpenClaw 的当前版本以 SQLite 为主。在实现并测试只读查询器之前，不要直接把数据库当 JSONL 读取。
+- DeepSeek Harness 的会话是 zstd 压缩的 JSONL（`session.jsonl.zstd`），解压需 Python `zstandard` 库。采集器用流式解压；库不可用时该源自动跳过。只提取 `source.kind == "user"` 的消息，过滤插件/系统注入的运行时上下文。
 - 网页版 AI 工具的历史记录通常只在云端；请用户直接粘贴关键交流，不尝试绕过平台权限。
 
 ## 数据安全
